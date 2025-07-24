@@ -4,6 +4,7 @@ import User from '../models/User.js'
 import { errorHandler, successHandler } from '../utils/responseHandler.js'
 
 import pkg from 'jsonwebtoken';
+import { uploadOnCloudinary } from '../utils/cloudinary.js';
 
 
 const { sign, verify } = pkg;
@@ -93,4 +94,9 @@ export const login = async (req, res) => {
         return errorHandler(res, 400, "soemthing went wroing", error.message)
 
     }
+}
+
+
+export const profilePicUpload = (req, res) => {
+    uploadOnCloudinary(req.file)
 }
