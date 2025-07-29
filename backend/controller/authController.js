@@ -38,7 +38,9 @@ export const register = async (req, res) => {
             firstName: firstName,
             lastName: lastName,
             password: hashPassword,
-            email: email
+            email: email,
+            age:age,
+            isAdmin: isAdmin,
         })
         await newUser.save();
         return successHandler(res, 200, "User Registered Successfully")
@@ -97,6 +99,9 @@ export const login = async (req, res) => {
 }
 
 
-export const profilePicUpload = (req, res) => {
-    uploadOnCloudinary(req.file)
+export const profilePicUpload = async  (req, res) => {
+   const picResponse =  await uploadOnCloudinary(req.file)
+   console.log(picResponse, "===========> pic response")
+    return successHandler(res, 200, picResponse )
+
 }

@@ -1,4 +1,4 @@
-import {v2 as cloudinary} from 'cloudinary';
+import { v2 as cloudinary } from 'cloudinary';
 import fs from 'fs'
 
 cloudinary.config({
@@ -7,13 +7,13 @@ cloudinary.config({
   api_secret: process.env.API_SECRET
 });
 
-export const uploadOnCloudinary = (file) => {
-  console.log(file, "==>>> file")
-  cloudinary.uploader
-  .upload(file.path)
-  .then(result=>{
-    console.log(result)
-    setTimeout(()=> fs.unlink(file.path, (err) => console.log(err)), 5000)
-  })
-  .catch((err)=> console.log(err))
+export const uploadOnCloudinary = async (file) => {
+  try {
+    console.log(file, "==>>> file")
+    const result = await cloudinary.uploader.upload(file.path)
+
+    // console.log(result , "====> cloud")
+    setTimeout(() => fs.unlink(file.path, (err) => console.log(err)), 5000)
+    return result
+  } catch (err) { console.log(err) }
 }

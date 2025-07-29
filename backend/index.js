@@ -2,6 +2,7 @@ import { connectDB } from './utils/connectDB.js';
 import express from 'express';
 import dotenv from 'dotenv'
 import { authRouter } from './routes/authRoute.js';
+import { userRouter } from './routes/userRoute.js';
 
 
 const app = express();
@@ -15,6 +16,7 @@ dotenv.config();
 connectDB();
 
 app.use('/api/auth', authRouter);
+app.use('/api/user', userRouter);
 
 
 app.listen(7700, () => {
