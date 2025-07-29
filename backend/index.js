@@ -18,7 +18,11 @@ connectDB();
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(7700, () => {
+        console.log("server Started 7700")
+    })
+}
 
-app.listen(7700, () => {
-    console.log("server Started 7700")
-})
+
+export default app;
