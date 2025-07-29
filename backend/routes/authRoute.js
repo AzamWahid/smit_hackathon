@@ -21,7 +21,7 @@ const upload = multer({ storage: storage })
 
 authRouter.post('/register', register)
 authRouter.post('/login', login)
-authRouter.post('/profilePic', upload.single('hanzala'), profilePicUpload)
+authRouter.post('/profilePic', upload.single('ProfPic'), profilePicUpload)
 
 
 
