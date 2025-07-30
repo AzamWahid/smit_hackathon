@@ -8,12 +8,16 @@ cloudinary.config({
 });
 
 export const uploadOnCloudinary = async (file) => {
-  try {
-    console.log(file, "==>>> file")
-    const result = await cloudinary.uploader.upload(file.path)
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      { resource_type: 'image' },
+      (error, result) => {
+        if (error) return reject(error);
+        resolve(result);
+      }
+    );
 
-    // console.log(result , "====> cloud")
-    setTimeout(() => fs.unlink(file.path, (err) => console.log(err)), 5000)
-    return result
-  } catch (err) { console.log(err.message) }
-}
+    streamifier.createReadStream(file.buffer).pipe(uploadStream);
+
+  })
+};
