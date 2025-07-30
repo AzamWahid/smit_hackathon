@@ -101,7 +101,6 @@ export const login = async (req, res) => {
 
 export const profilePicUpload = async  (req, res) => {
    const picResponse =  await uploadOnCloudinary(req.file)
-   console.log(picResponse, "===========> pic response")
-    return successHandler(res, 200, picResponse )
+    return successHandler(res, 200, "Pic Uploaded successfully",picResponse )
 
 }
