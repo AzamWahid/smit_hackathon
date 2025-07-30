@@ -15,5 +15,5 @@ export const uploadOnCloudinary = async (file) => {
     // console.log(result , "====> cloud")
     setTimeout(() => fs.unlink(file.path, (err) => console.log(err)), 5000)
     return result
-  } catch (err) { console.log(err) }
+  } catch (err) { console.log(err.message) }
 }

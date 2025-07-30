@@ -8,7 +8,7 @@ export const getAllUsers = async (req, res) => {
     }
     catch (err) {
         console.log(err);
-        errorHandler(res, 400, "something went wrong")
+        errorHandler(res, 400, err.message)
     }
 }
 
@@ -20,7 +20,7 @@ export const getUserByID = async (req, res) => {
     }
     catch (err) {
         console.log(err);
-        errorHandler(res, 400, "something went wrong")
+        errorHandler(res, 400, err.message)
     }
 }
 
@@ -36,6 +36,6 @@ export const getSpecificUser = async (req, res) => {
     }
     catch (err) {
         console.log(err);
-        errorHandler(res, 400, "something went wrong")
+        errorHandler(res, 400, err.message)
     }
 }
