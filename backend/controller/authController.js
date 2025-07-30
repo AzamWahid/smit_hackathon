@@ -99,8 +99,20 @@ export const login = async (req, res) => {
 }
 
 
-export const profilePicUpload = async  (req, res) => {
-   const picResponse =  await uploadOnCloudinary(req.file)
-    return successHandler(res, 200, "Pic Uploaded successfully",picResponse )
+export const profilePicUpload = async (req, res) => {
+    try {
+        if (!req.file) {
+            return errorHandler(res, 400, "Please select pic")
+
+        }
+        else {
+
+            const picResponse = await uploadOnCloudinary(req.file)
+            return successHandler(res, 200, "Pic Uploaded successfully", picResponse)
+        }
+    }
+    catch (err) {
+        return errorHandler(res, 400, "Something went wrong")
+    }
 
 }
