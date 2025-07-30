@@ -93,7 +93,7 @@ export const login = async (req, res) => {
         return successHandler(res, 200, "User login Successfully")
 
     } catch (error) {
-        return errorHandler(res, 400, "soemthing went wroing", error.message)
+        return errorHandler(res, 400, "soemthing went wrong", error.message)
 
     }
 }
