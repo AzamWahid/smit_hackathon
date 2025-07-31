@@ -12,9 +12,17 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import { Link } from 'react-router-dom';
 
-const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const pages = [{ name: 'Products', link: '/products' },
+{ name: 'Pricing', link: '/pricing' },
+{ name: 'Blog', link: '/createblog' },
+{ name: 'Login / Signup', link: '/login' }];
+
+const settings = [{ name: 'Profile', link: '/profile' },
+{ name: 'Account', link: '/account' },
+{ name: 'Dashboard', link: '/dashboard' },
+{ name: 'Logout' }];
 
 function NavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -34,6 +42,10 @@ function NavBar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const handleLogout = () => {
+    console.log('logout')
+  }
 
   return (
     <AppBar position="static">
@@ -85,9 +97,13 @@ function NavBar() {
               onClose={handleCloseNavMenu}
               sx={{ display: { xs: 'block', md: 'none' } }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography sx={{ textAlign: 'center' }}>{page}</Typography>
+              {pages.map((page, idx) => (
+                <MenuItem key={idx} onClick={handleCloseNavMenu}>
+                  <Link to={page.link} style={{ textDecoration: 'none', color: 'inherit' }}>
+                    <Typography sx={{ textAlign: 'center' }}>
+                      {page.name}
+                    </Typography>
+                  </Link>
                 </MenuItem>
               ))}
             </Menu>
@@ -112,13 +128,15 @@ function NavBar() {
             LOGO
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
+            {pages.map((page, idx) => (
               <Button
-                key={page}
+                key={idx}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
-                {page}
+                <Link to={page.link} style={{ textDecoration: 'none', color: 'inherit' }}>
+                  {page.name}
+                </Link>
               </Button>
             ))}
           </Box>
@@ -144,9 +162,20 @@ function NavBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
+              {settings.map((setting, idx) => (
+                <MenuItem key={idx} onClick={handleCloseUserMenu}>
+                  {setting.link ?
+                    <Link to={setting.link} style={{ textDecoration: 'none', color: 'inherit' }}>
+                      <Typography sx={{ textAlign: 'center' }}>
+                        {setting.name}
+                      </Typography>
+                    </Link>
+                    :
+                    <Typography sx={{ textAlign: 'center' }}
+                      onClick={handleLogout} >
+                      {setting.name}
+                    </Typography>
+                  }
                 </MenuItem>
               ))}
             </Menu>
