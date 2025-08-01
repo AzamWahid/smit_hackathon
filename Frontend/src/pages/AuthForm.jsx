@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Box,
   Grid,
@@ -13,6 +13,8 @@ import {
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { styled } from '@mui/material/styles';
+import axios from 'axios';
+import { BASE_URL } from '../utils';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
@@ -27,6 +29,11 @@ const AuthForm = () => {
   const [tabIndex, setTabIndex] = useState(0);
   const [fadeIn, setFadeIn] = useState(true);
   const [profileImage, setProfileImage] = useState(null);
+
+  const fullNameRef = useRef(null);
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
+  const confirmPassRef = useRef(null);
 
   const handleTabChange = (event, newValue) => {
     setFadeIn(false);
@@ -43,6 +50,35 @@ const AuthForm = () => {
       setProfileImage(URL.createObjectURL(file));
     }
   };
+
+  const singupHandler = () => {
+
+    let fullName = fullNameRef.current.value;
+    let email = emailRef.current.value;
+    let password = passwordRef.current.value;
+    let confirmPass = confirmPassRef.current.value;
+
+    if (!fullName || !email || !password || !confirmPass) {
+      return alert("Fields should not be empty")
+    }
+
+    if (password.length < 9) {
+      return alert("Password should be minimum 8 character long")
+
+    }
+
+    if (password !== confirmPass) {
+      return alert("Password & confirm password mismatch");
+    }
+
+    try {
+      const user = axios.post(`${BASE_URL}/auth/register`);
+    }catch(err) {
+      console.log(err.message)
+    }
+
+
+  }
 
   const LoginForm = () => (
     <Fade in={fadeIn}>
@@ -77,10 +113,11 @@ const AuthForm = () => {
             </Avatar>
           </label>
         </Box>
-        <TextField fullWidth label="Full Name" variant="outlined" margin="normal" />
-        <TextField fullWidth label="Email" variant="outlined" margin="normal" />
-        <TextField fullWidth label="Password" type="password" variant="outlined" margin="normal" />
-        <Button fullWidth variant="contained" sx={{ mt: 2 }} size="large">
+        <TextField inputRef={fullNameRef} fullWidth label="Full Name" variant="outlined" margin="normal" />
+        <TextField inputRef={emailRef} fullWidth label="Email" variant="outlined" margin="normal" />
+        <TextField inputRef={passwordRef} fullWidth label="Password" type="password" variant="outlined" margin="normal" />
+        <TextField inputRef={confirmPassRef} fullWidth label="Confirm Password" type="password" variant="outlined" margin="normal" />
+        <Button fullWidth variant="contained" sx={{ mt: 2 }} size="large" onClick={singupHandler}>
           Sign Up
         </Button>
       </Box>
