@@ -14,7 +14,7 @@ import {
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
-import { BASE_URL } from '../utils';
+import { BASE_URL, ToastAlert } from '../utils';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
@@ -29,8 +29,11 @@ const AuthForm = () => {
   const [tabIndex, setTabIndex] = useState(0);
   const [fadeIn, setFadeIn] = useState(true);
   const [profileImage, setProfileImage] = useState(null);
+  const [profileFile, setProfileFile] = useState(null);
 
-  const fullNameRef = useRef(null);
+  const userNameRef = useRef(null);
+  const firstNameRef = useRef(null);
+  const lastNameRef = useRef(null);
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
   const confirmPassRef = useRef(null);
@@ -47,18 +50,22 @@ const AuthForm = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      setProfileFile(file)
       setProfileImage(URL.createObjectURL(file));
     }
   };
 
-  const singupHandler = () => {
+  const singupHandler = async () => {
 
-    let fullName = fullNameRef.current.value;
+    let userName = userNameRef.current.value;
+    let firstName = firstNameRef.current.value;
+    let lastName = lastNameRef.current.value;
     let email = emailRef.current.value;
     let password = passwordRef.current.value;
     let confirmPass = confirmPassRef.current.value;
+    let imageUrl = ''
 
-    if (!fullName || !email || !password || !confirmPass) {
+    if (!userName || !email || !password || !confirmPass) {
       return alert("Fields should not be empty")
     }
 
@@ -71,9 +78,29 @@ const AuthForm = () => {
       return alert("Password & confirm password mismatch");
     }
 
+
+
     try {
-      const user = axios.post(`${BASE_URL}/auth/register`);
-    }catch(err) {
+      if (profileFile) {
+        const formData = new FormData();
+        formData.append('image', profileFile)
+
+
+        const imageRes = await axios.post(`${BASE_URL}/auth/profilePic`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        imageUrl = imageRes.data.imageUrl;
+      }
+
+      const RegData = {
+        userName, email, password, firstName, lastName, profilePic:imageUrl, age, isAdmin: false
+      }
+
+      const user = axios.post(`${BASE_URL}/auth/register`, RegData);
+      ToastAlert('success', 'User Register Successfully')
+    } catch (err) {
       console.log(err.message)
     }
 
@@ -113,7 +140,9 @@ const AuthForm = () => {
             </Avatar>
           </label>
         </Box>
-        <TextField inputRef={fullNameRef} fullWidth label="Full Name" variant="outlined" margin="normal" />
+        <TextField inputRef={userNameRef} fullWidth label="User Name" variant="outlined" margin="normal" />
+        <TextField inputRef={firstNameRef} fullWidth label="First Name" variant="outlined" margin="normal" />
+        <TextField inputRef={lastNameRef} fullWidth label="Last Name" variant="outlined" margin="normal" />
         <TextField inputRef={emailRef} fullWidth label="Email" variant="outlined" margin="normal" />
         <TextField inputRef={passwordRef} fullWidth label="Password" type="password" variant="outlined" margin="normal" />
         <TextField inputRef={confirmPassRef} fullWidth label="Confirm Password" type="password" variant="outlined" margin="normal" />

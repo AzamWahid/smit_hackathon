@@ -12,7 +12,7 @@ const { sign, verify } = pkg;
 
 export const register = async (req, res) => {
     // console.log(req.body)
-    const { userName, email, password, firstName, lastName, age, isAdmin } = req.body
+    const { userName, email, password, firstName, lastName,profilePic, age, isAdmin } = req.body
 
     if (!userName || !email || !password || !firstName || !lastName) {
         // return errorHandler(res, 400, "missing fields");
@@ -39,6 +39,7 @@ export const register = async (req, res) => {
             lastName: lastName,
             password: hashPassword,
             email: email,
+            profilePic: profilePic,
             age:age,
             isAdmin: isAdmin,
         })
