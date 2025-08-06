@@ -83,7 +83,7 @@ const AuthForm = () => {
     try {
       if (profileFile) {
         const formData = new FormData();
-        formData.append('image', profileFile)
+        formData.append('ProfPic', profileFile)
 
 
         const imageRes = await axios.post(`${BASE_URL}/auth/profilePic`, formData, {
@@ -91,15 +91,15 @@ const AuthForm = () => {
             'Content-Type': 'multipart/form-data',
           },
         });
-        imageUrl = imageRes.data.imageUrl;
+        imageUrl = imageRes.data.data.secure_url;
       }
 
       const RegData = {
-        userName, email, password, firstName, lastName, profilePic:imageUrl, age, isAdmin: false
+        userName, email, password, firstName, lastName, profilePic: imageUrl, age: 0, isAdmin: false
       }
-
-      const user = axios.post(`${BASE_URL}/auth/register`, RegData);
-      ToastAlert('success', 'User Register Successfully')
+      const user = await axios.post(`${BASE_URL}/auth/register`, RegData);
+      ToastAlert({ type: 'success', message: 'User Register Successfully' })
+      setTabIndex(0);
     } catch (err) {
       console.log(err.message)
     }

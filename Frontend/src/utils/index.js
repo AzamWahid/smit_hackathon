@@ -5,7 +5,7 @@ import { Bounce, toast } from "react-toastify";
 
 // obj = {type , message}
 export const ToastAlert = (obj) => {
-
+    console.log(obj)
     switch (obj.type) {
 
         case "success":
