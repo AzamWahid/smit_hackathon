@@ -31,6 +31,7 @@ const AuthForm = () => {
   const [profileImage, setProfileImage] = useState(null);
   const [profileFile, setProfileFile] = useState(null);
 
+
   const userNameRef = useRef(null);
   const firstNameRef = useRef(null);
   const lastNameRef = useRef(null);
@@ -65,6 +66,18 @@ const AuthForm = () => {
     let confirmPass = confirmPassRef.current.value;
     let imageUrl = ''
 
+    const data = new FormData();
+    data.append('userName', userName);
+    data.append('email', email);
+    data.append('password', password);
+    data.append('firstName', firstName);
+    data.append('lastName', lastName);
+    data.append('age', 0);
+    data.append('isAdmin', false);
+    if (profileImage) {
+      data.append('ProfPic', profileImage);
+    }
+
     if (!userName || !email || !password || !confirmPass) {
       return alert("Fields should not be empty")
     }
@@ -81,23 +94,20 @@ const AuthForm = () => {
 
 
     try {
-      if (profileFile) {
-        const formData = new FormData();
-        formData.append('ProfPic', profileFile)
+    
 
-
-        const imageRes = await axios.post(`${BASE_URL}/auth/profilePic`, formData, {
+        const user = await axios.post(`${BASE_URL}/auth/register`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
         });
-        imageUrl = imageRes.data.data.secure_url;
-      }
 
-      const RegData = {
-        userName, email, password, firstName, lastName, profilePic: imageUrl, age: 0, isAdmin: false
-      }
-      const user = await axios.post(`${BASE_URL}/auth/register`, RegData);
+      
+
+      // const RegData = {
+      //   userName, email, password, firstName, lastName, profilePic: imageUrl, age: 0, isAdmin: false
+      // }
+      // const user = await axios.post(`${BASE_URL}/auth/register`, RegData);
       ToastAlert({ type: 'success', message: 'User Register Successfully' })
       setTabIndex(0);
     } catch (err) {
