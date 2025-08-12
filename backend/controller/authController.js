@@ -12,7 +12,7 @@ const { sign, verify } = pkg;
 
 export const register = async (req, res) => {
     // console.log(req.body)
-    const { userName, email, password, firstName, lastName,profilePic, age, isAdmin } = req.body
+    const { userName, email, password, firstName, lastName, age, isAdmin } = req.body
 
     if (!userName || !email || !password || !firstName || !lastName) {
         // return errorHandler(res, 400, "missing fields");
@@ -31,6 +31,17 @@ export const register = async (req, res) => {
         return errorHandler(res, 400, "Password length should be minimum 8 characters long")
 
     }
+    let picResponse = {};
+    if (!req.file) {
+        return errorHandler(res, 400, "Please select pic")
+
+    }
+    else {
+
+        picResponse = await uploadOnCloudinary(req.file)
+        // return successHandler(res, 200, "Pic Uploaded successfully", picResponse)
+    }
+
 
     try {
         const newUser = new User({
@@ -39,14 +50,15 @@ export const register = async (req, res) => {
             lastName: lastName,
             password: hashPassword,
             email: email,
-            profilePic: profilePic,
-            age:age,
+            profilePic: picResponse.secure_url,
+            age: age,
             isAdmin: isAdmin,
         })
         await newUser.save();
         return successHandler(res, 200, "User Registered Successfully")
 
     } catch (error) {
+        console.log(err)
         return errorHandler(res, 400, "Something went wrong", error.message)
 
     }

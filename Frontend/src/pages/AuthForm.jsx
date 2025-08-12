@@ -74,8 +74,8 @@ const AuthForm = () => {
     data.append('lastName', lastName);
     data.append('age', 0);
     data.append('isAdmin', false);
-    if (profileImage) {
-      data.append('ProfPic', profileImage);
+    if (profileFile) {
+      data.append('ProfPic', profileFile);
     }
 
     if (!userName || !email || !password || !confirmPass) {
@@ -96,7 +96,7 @@ const AuthForm = () => {
     try {
     
 
-        const user = await axios.post(`${BASE_URL}/auth/register`, formData, {
+        const user = await axios.post(`${BASE_URL}/auth/register`, data, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
