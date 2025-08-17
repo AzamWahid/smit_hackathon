@@ -23,7 +23,7 @@ const authRouter = express.Router();
 const upload = multer({ storage: storage })
 
 
-authRouter.post('/register', register)
+authRouter.post('/register',upload.single('ProfPic'), register)
 authRouter.post('/login', login)
 authRouter.post('/profilePic', upload.single('ProfPic'), profilePicUpload)
 

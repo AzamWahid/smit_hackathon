@@ -31,6 +31,17 @@ export const register = async (req, res) => {
         return errorHandler(res, 400, "Password length should be minimum 8 characters long")
 
     }
+    let picResponse = {};
+    if (!req.file) {
+        return errorHandler(res, 400, "Please select pic")
+
+    }
+    else {
+
+        picResponse = await uploadOnCloudinary(req.file)
+        // return successHandler(res, 200, "Pic Uploaded successfully", picResponse)
+    }
+
 
     try {
         const newUser = new User({
@@ -39,13 +50,15 @@ export const register = async (req, res) => {
             lastName: lastName,
             password: hashPassword,
             email: email,
-            age:age,
+            profilePic: picResponse.secure_url,
+            age: age,
             isAdmin: isAdmin,
         })
         await newUser.save();
         return successHandler(res, 200, "User Registered Successfully")
 
     } catch (error) {
+        console.log(err)
         return errorHandler(res, 400, "Something went wrong", error.message)
 
     }
