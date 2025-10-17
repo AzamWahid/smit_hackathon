@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Grid,
@@ -25,143 +25,161 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   boxShadow: '0px 4px 30px rgba(0,0,0,0.1)',
 }));
 
+// ✅ Signup Form (separate component)
+const SignupForm = ({ fadeIn, formData, handleChange, handleImageChange, profileImage, signupHandler }) => (
+  <Fade in={fadeIn}>
+    <Box>
+      <Box display="flex" justifyContent="center" mb={2}>
+        <label htmlFor="upload-photo">
+          <input
+            style={{ display: 'none' }}
+            id="upload-photo"
+            name="upload-photo"
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+          />
+          <Avatar src={profileImage} sx={{ width: 80, height: 80, cursor: 'pointer' }}>
+            {!profileImage && <LockOutlinedIcon />}
+          </Avatar>
+        </label>
+      </Box>
+      <TextField name="userName" value={formData.userName} onChange={handleChange} fullWidth label="User Name" variant="outlined" margin="normal" />
+      <TextField name="firstName" value={formData.firstName} onChange={handleChange} fullWidth label="First Name" variant="outlined" margin="normal" />
+      <TextField name="lastName" value={formData.lastName} onChange={handleChange} fullWidth label="Last Name" variant="outlined" margin="normal" />
+      <TextField name="email" value={formData.email} onChange={handleChange} fullWidth label="Email" variant="outlined" margin="normal" />
+      <TextField name="password" value={formData.password} onChange={handleChange} fullWidth label="Password" type="password" variant="outlined" margin="normal" />
+      <TextField name="confirmPass" value={formData.confirmPass} onChange={handleChange} fullWidth label="Confirm Password" type="password" variant="outlined" margin="normal" />
+      <Button fullWidth variant="contained" sx={{ mt: 2 }} size="large" onClick={signupHandler}>
+        Sign Up
+      </Button>
+    </Box>
+  </Fade>
+);
+
+// ✅ Login Form (separate component)
+const LoginForm = ({ fadeIn, loginData, handleLoginChange, loginHandler }) => (
+  <Fade in={fadeIn}>
+    <Box>
+      <TextField
+        fullWidth
+        label="Email"
+        name="email"
+        value={loginData.email}
+        onChange={handleLoginChange}
+        variant="outlined"
+        margin="normal"
+      />
+      <TextField
+        fullWidth
+        label="Password"
+        name="password"
+        value={loginData.password}
+        onChange={handleLoginChange}
+        type="password"
+        variant="outlined"
+        margin="normal"
+      />
+      <Button fullWidth variant="contained" sx={{ mt: 2 }} size="large" onClick={loginHandler}>
+        Login
+      </Button>
+    </Box>
+  </Fade>
+);
+
+// ✅ Main Component
 const AuthForm = () => {
   const [tabIndex, setTabIndex] = useState(0);
   const [fadeIn, setFadeIn] = useState(true);
   const [profileImage, setProfileImage] = useState(null);
   const [profileFile, setProfileFile] = useState(null);
-
-
-  const userNameRef = useRef(null);
-  const firstNameRef = useRef(null);
-  const lastNameRef = useRef(null);
-  const emailRef = useRef(null);
-  const passwordRef = useRef(null);
-  const confirmPassRef = useRef(null);
+  const [formData, setFormData] = useState({
+    userName: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    confirmPass: '',
+  });
+  const [loginData, setLoginData] = useState({ email: '', password: '' });
 
   const handleTabChange = (event, newValue) => {
     setFadeIn(false);
     setTimeout(() => {
       setTabIndex(newValue);
       setFadeIn(true);
-      setProfileImage(null); // Reset image on tab switch
+      setProfileImage(null);
     }, 300);
   };
+
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleLoginChange = (e) => setLoginData({ ...loginData, [e.target.name]: e.target.value });
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setProfileFile(file)
+      setProfileFile(file);
       setProfileImage(URL.createObjectURL(file));
     }
   };
 
-  const singupHandler = async () => {
-
-    let userName = userNameRef.current.value;
-    let firstName = firstNameRef.current.value;
-    let lastName = lastNameRef.current.value;
-    let email = emailRef.current.value;
-    let password = passwordRef.current.value;
-    let confirmPass = confirmPassRef.current.value;
-    let imageUrl = ''
-
-    const data = new FormData();
-    data.append('userName', userName);
-    data.append('email', email);
-    data.append('password', password);
-    data.append('firstName', firstName);
-    data.append('lastName', lastName);
-    data.append('age', 0);
-    data.append('isAdmin', false);
-    if (profileFile) {
-      data.append('ProfPic', profileFile);
-    }
-
-    if (!userName || !email || !password || !confirmPass) {
-      return alert("Fields should not be empty")
-    }
-
-    if (password.length < 9) {
-      return alert("Password should be minimum 8 character long")
-
-    }
-
-    if (password !== confirmPass) {
-      return alert("Password & confirm password mismatch");
-    }
-
-
+  const signupHandler = async () => {
+    const { userName, firstName, lastName, email, password, confirmPass } = formData;
+    if (!userName || !email || !password || !confirmPass)
+      return alert('Fields should not be empty');
+    if (password.length < 8)
+      return alert('Password should be minimum 8 characters long');
+    if (password !== confirmPass)
+      return alert('Password & confirm password mismatch');
 
     try {
-    
+      const data = new FormData();
+      data.append('userName', userName);
+      data.append('email', email);
+      data.append('password', password);
+      data.append('firstName', firstName);
+      data.append('lastName', lastName);
+      data.append('age', 0);
+      data.append('isAdmin', false);
+      if (profileFile) data.append('ProfPic', profileFile);
 
-        const user = await axios.post(`${BASE_URL}/auth/register`, data, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
+      await axios.post(`${BASE_URL}/auth/register`, data, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
 
-      
-
-      // const RegData = {
-      //   userName, email, password, firstName, lastName, profilePic: imageUrl, age: 0, isAdmin: false
-      // }
-      // const user = await axios.post(`${BASE_URL}/auth/register`, RegData);
-      ToastAlert({ type: 'success', message: 'User Register Successfully' })
+      ToastAlert({ type: 'success', message: 'User Registered Successfully' });
       setTabIndex(0);
+      setFormData({
+        userName: '',
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        confirmPass: '',
+      });
     } catch (err) {
-      console.log(err.message)
+      console.error(err);
+      ToastAlert({ type: 'error', message: err.response?.data?.message || 'Signup failed' });
     }
+  };
 
+  const loginHandler = async () => {
+    const { email, password } = loginData;
+    if (!email || !password) return alert('Enter both fields');
 
-  }
+    try {
+      const res = await axios.post(`${BASE_URL}/auth/login`, { email, password });
+      const { token, user } = res.data;
 
-  const LoginForm = () => (
-    <Fade in={fadeIn}>
-      <Box component="form" noValidate autoComplete="off">
-        <TextField fullWidth label="Email" variant="outlined" margin="normal" />
-        <TextField fullWidth label="Password" type="password" variant="outlined" margin="normal" />
-        <Button fullWidth variant="contained" sx={{ mt: 2 }} size="large">
-          Login
-        </Button>
-      </Box>
-    </Fade>
-  );
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
 
-  const SignupForm = () => (
-    <Fade in={fadeIn}>
-      <Box component="form" noValidate autoComplete="off">
-        <Box display="flex" justifyContent="center" mb={2}>
-          <label htmlFor="upload-photo">
-            <input
-              style={{ display: 'none' }}
-              id="upload-photo"
-              name="upload-photo"
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-            />
-            <Avatar
-              src={profileImage}
-              sx={{ width: 80, height: 80, cursor: 'pointer' }}
-            >
-              {profileImage ? '' : <LockOutlinedIcon />}
-            </Avatar>
-          </label>
-        </Box>
-        <TextField inputRef={userNameRef} fullWidth label="User Name" variant="outlined" margin="normal" />
-        <TextField inputRef={firstNameRef} fullWidth label="First Name" variant="outlined" margin="normal" />
-        <TextField inputRef={lastNameRef} fullWidth label="Last Name" variant="outlined" margin="normal" />
-        <TextField inputRef={emailRef} fullWidth label="Email" variant="outlined" margin="normal" />
-        <TextField inputRef={passwordRef} fullWidth label="Password" type="password" variant="outlined" margin="normal" />
-        <TextField inputRef={confirmPassRef} fullWidth label="Confirm Password" type="password" variant="outlined" margin="normal" />
-        <Button fullWidth variant="contained" sx={{ mt: 2 }} size="large" onClick={singupHandler}>
-          Sign Up
-        </Button>
-      </Box>
-    </Fade>
-  );
+      ToastAlert({ type: 'success', message: `Welcome back ${user.userName}!` });
+    } catch (err) {
+      console.error(err);
+      ToastAlert({ type: 'error', message: err.response?.data?.message || 'Invalid credentials' });
+    }
+  };
 
   return (
     <Grid container justifyContent="center">
@@ -180,7 +198,24 @@ const AuthForm = () => {
           <Tab label="Login" />
           <Tab label="Signup" />
         </Tabs>
-        {tabIndex === 0 ? <LoginForm /> : <SignupForm />}
+
+        {tabIndex === 0 ? (
+          <LoginForm
+            fadeIn={fadeIn}
+            loginData={loginData}
+            handleLoginChange={handleLoginChange}
+            loginHandler={loginHandler}
+          />
+        ) : (
+          <SignupForm
+            fadeIn={fadeIn}
+            formData={formData}
+            handleChange={handleChange}
+            handleImageChange={handleImageChange}
+            profileImage={profileImage}
+            signupHandler={signupHandler}
+          />
+        )}
       </StyledPaper>
     </Grid>
   );
