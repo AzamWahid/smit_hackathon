@@ -5,6 +5,7 @@ import { errorHandler, successHandler } from '../utils/responseHandler.js'
 
 import pkg from 'jsonwebtoken';
 import { uploadOnCloudinary } from '../utils/cloudinary.js';
+import { connectDB } from '../utils/connectDB.js';
 
 
 const { sign, verify } = pkg;
@@ -19,6 +20,7 @@ export const register = async (req, res) => {
         return errorHandler(res, 400, "missing fields")
     }
 
+    await connectDB();
     // const isExists = await Users.find({ $or: [{ email: email }, { userName: userName }] })
     const isExists = await User.findOne({ $or: [{ email: email }, { userName: userName }] })
 
