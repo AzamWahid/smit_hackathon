@@ -170,7 +170,7 @@ const AuthForm = () => {
     try {
       const res = await axios.post(`${BASE_URL}/auth/login`, { email, password }, { withCredentials: true });
       console.log(res);
-      const { data:user } = res.data;
+      const user  = res.data.data;
             console.log(user);
 
       // localStorage.setItem('token', token);
