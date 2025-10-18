@@ -8,7 +8,28 @@ import cors from 'cors'
 
 const app = express();
 
-app.use(cors())
+const allowedOrigins = [
+  "http://localhost:5173",          // local dev
+  "https://smitfe.vercel.app/",     // deployed frontend
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like Postman)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true, // Allow cookies, auth headers
+  })
+);
+
+
 
 
 app.use(express.json());
