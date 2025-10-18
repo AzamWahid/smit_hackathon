@@ -168,10 +168,12 @@ const AuthForm = () => {
     if (!email || !password) return alert('Enter both fields');
 
     try {
-      const res = await axios.post(`${BASE_URL}/auth/login`, { email, password });
-      const { token, user } = res.data;
+      const res = await axios.post(`${BASE_URL}/auth/login`, { email, password }, { withCredentials: true });
+      console.log(res.data.data);
+      const { data:user } = res.data;
+            console.log(user);
 
-      localStorage.setItem('token', token);
+      // localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(user));
 
       ToastAlert({ type: 'success', message: `Welcome back ${user.userName}!` });
