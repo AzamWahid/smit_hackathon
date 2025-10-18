@@ -4,9 +4,13 @@ import dotenv from 'dotenv'
 import { authRouter } from './routes/authRoute.js';
 import { userRouter } from './routes/userRoute.js';
 import cors from 'cors'
+import reportRouter from './routes/reportRoutes.js';
+import cookieParser from "cookie-parser";
 
 
 const app = express();
+
+app.use(cookieParser());
 
 const allowedOrigins = [
   "http://localhost:5173",          // local dev
@@ -41,6 +45,7 @@ connectDB();
 
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
+app.use('/api/reports', reportRouter);
 
 if (process.env.NODE_ENV !== 'production') {
     app.listen(7700, () => {
