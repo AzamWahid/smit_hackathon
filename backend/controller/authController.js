@@ -80,13 +80,13 @@ export const login = async (req, res) => {
 
 
         if (!isExists) {
-            return errorHandler(res, 400, "User Name not exists, please retry")
+            return errorHandler(res, 400, "email not exists, please retry")
         }
         const isPasswordCorrect = await compare(
             password, isExists.password
         );
         if (!isPasswordCorrect) {
-            return errorHandler(res, 400, "User Name not exists, please retry")
+            return errorHandler(res, 400, "Invalid Creditinals, please retry")
         }
 
 
@@ -98,14 +98,14 @@ export const login = async (req, res) => {
         }, process.env.JWT)
         console.log(token)
 
-        const { userPassword, ...otherDetails } = isExists._doc;
+        const { password:userPassword, ...otherDetails } = isExists._doc;
         res.cookie("access_token", token, {
             httpOnly: true,
             // secure: true,
             // sameSite: "None"
         });
 
-        return successHandler(res, 200, "User login Successfully")
+        return successHandler(res, 200, "User login Successfully",otherDetails)
 
     } catch (error) {
         return errorHandler(res, 400, "soemthing went wrong", error.message)
