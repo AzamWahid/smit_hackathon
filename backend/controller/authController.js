@@ -101,8 +101,8 @@ export const login = async (req, res) => {
         const { password:userPassword, ...otherDetails } = isExists._doc;
         res.cookie("access_token", token, {
             httpOnly: true,
-            // secure: true,
-            // sameSite: "None"
+            secure: true,
+            sameSite: "None"
         });
 
         return successHandler(res, 200, "User login Successfully",otherDetails)
