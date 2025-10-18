@@ -10,7 +10,7 @@ const app = express();
 
 const allowedOrigins = [
   "http://localhost:5173",          // local dev
-  "https://smitfe.vercel.app/",     // deployed frontend
+  "https://smitfe.vercel.app",     // deployed frontend
 ];
 
 app.use(
