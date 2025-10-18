@@ -74,6 +74,7 @@ export const login = async (req, res) => {
             // return errorHandler(res, 400, "missing fields");
             return errorHandler(res, 400, "missing fields")
         }
+        await connectDB();
 
         // const isExists = await Users.find({ $or: [{ email: email }, { userName: userName }] })
         const isExists = await User.findOne({ email: email })
@@ -98,14 +99,14 @@ export const login = async (req, res) => {
         }, process.env.JWT)
         console.log(token)
 
-        const { password:userPassword, ...otherDetails } = isExists._doc;
+        const { password: userPassword, ...otherDetails } = isExists._doc;
         res.cookie("access_token", token, {
             httpOnly: true,
             secure: true,
             sameSite: "None"
         });
 
-        return successHandler(res, 200, "User login Successfully",otherDetails)
+        return successHandler(res, 200, "User login Successfully", otherDetails)
 
     } catch (error) {
         return errorHandler(res, 400, "soemthing went wrong", error.message)
