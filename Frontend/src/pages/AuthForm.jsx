@@ -169,7 +169,7 @@ const AuthForm = () => {
 
     try {
       const res = await axios.post(`${BASE_URL}/auth/login`, { email, password }, { withCredentials: true });
-      console.log(res.data.data);
+      console.log(res);
       const { data:user } = res.data;
             console.log(user);
 
