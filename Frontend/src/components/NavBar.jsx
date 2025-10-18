@@ -14,6 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../redux/slices/authSlice';
 
 const pages = [{ name: 'Products', link: '/products' },
 { name: 'Pricing', link: '/pricing' },
@@ -49,6 +50,9 @@ function NavBar() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
+    // console.log("he")
+      handleCloseUserMenu();  // 👈 pehle menu band kar
+
     dispatch(logout());
     navigate("/login");
   };
