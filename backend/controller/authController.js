@@ -68,15 +68,15 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
     try {
-        const { userName, password } = req.body
+        const { email, password } = req.body
 
-        if (!userName || !password) {
+        if (!email || !password) {
             // return errorHandler(res, 400, "missing fields");
             return errorHandler(res, 400, "missing fields")
         }
 
         // const isExists = await Users.find({ $or: [{ email: email }, { userName: userName }] })
-        const isExists = await User.findOne({ userName: userName })
+        const isExists = await User.findOne({ email: email })
 
 
         if (!isExists) {
