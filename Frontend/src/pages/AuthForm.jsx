@@ -15,6 +15,9 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
 import { BASE_URL, ToastAlert } from '../utils';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { loginSuccess } from '../redux/slices/authSlice';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
@@ -103,6 +106,9 @@ const AuthForm = () => {
   });
   const [loginData, setLoginData] = useState({ email: '', password: '' });
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const handleTabChange = (event, newValue) => {
     setFadeIn(false);
     setTimeout(() => {
@@ -170,13 +176,15 @@ const AuthForm = () => {
     try {
       const res = await axios.post(`${BASE_URL}/auth/login`, { email, password }, { withCredentials: true });
       console.log(res);
-      const user  = res.data.data;
-            console.log(user);
+      const user = res.data.data;
+      console.log(user);
 
       // localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
+      // localStorage.setItem('user', JSON.stringify(user));
+      dispatch(loginSuccess(user)); // Redux me user save kar
 
       ToastAlert({ type: 'success', message: `Welcome back ${user.userName}!` });
+      navigate("/");
     } catch (err) {
       console.error(err);
       ToastAlert({ type: 'error', message: err.response?.data?.message || 'Invalid credentials' });
