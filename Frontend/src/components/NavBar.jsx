@@ -12,7 +12,8 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
 const pages = [{ name: 'Products', link: '/products' },
 { name: 'Pricing', link: '/pricing' },
@@ -43,9 +44,15 @@ function NavBar() {
     setAnchorElUser(null);
   };
 
+  const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const handleLogout = () => {
-    console.log('logout')
-  }
+    dispatch(logout());
+    navigate("/login");
+  };
+
 
   return (
     <AppBar position="static">
@@ -140,11 +147,13 @@ function NavBar() {
               </Button>
             ))}
           </Box>
-          
+
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                {/* <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" /> */}
+                <Avatar alt={user?.userName || "Guest"} src={user?.profilePic || "/static/images/avatar/2.jpg"} />
+
               </IconButton>
             </Tooltip>
             <Menu
