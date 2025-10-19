@@ -10,7 +10,7 @@ export const uploadReport = async (req, res) => {
     if (!req.file) return errorHandler(res, 400, "Please select a file");
     // console.log(req)
     await connectDB();
-    const uploadRes = await uploadOnCloudinary(req.file); // allow pdf/image
+    const uploadRes = await uploadOnCloudinary(req.file,'file'); // allow pdf/image
     const report = await Report.create({
       userId: req.userId, // from auth middleware
       reportName: req.body.reportName,
