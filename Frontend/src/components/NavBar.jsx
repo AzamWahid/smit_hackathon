@@ -158,7 +158,7 @@ function NavBar() {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            HEALTH MATE
           </Typography>
 
           {/* Pages for desktop */}

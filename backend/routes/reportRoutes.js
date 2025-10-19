@@ -5,7 +5,9 @@ import { verifyToken } from "../middleware/authMiddleware.js";
 
 const reportRouter = express.Router();
 const storage = multer.memoryStorage();
-const upload = multer({ dest: "uploads/" });
+// const upload = multer({ dest: "uploads/" });
+const upload = multer({ storage }); // 👈 use memoryStorage, no disk folder
+
 
 
 // Protected routes
