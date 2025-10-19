@@ -1,5 +1,5 @@
-export const BASE_URL = `https://smitbe.vercel.app/api`;
-//export const BASE_URL = `http://localhost:7700/api`;
+// export const BASE_URL = `https://smitbe.vercel.app/api`;
+export const BASE_URL = `http://localhost:7700/api`;
 
 
 import { Bounce, toast } from "react-toastify";

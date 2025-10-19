@@ -6,6 +6,7 @@ import { userRouter } from './routes/userRoute.js';
 import cors from 'cors'
 import reportRouter from './routes/reportRoutes.js';
 import cookieParser from "cookie-parser";
+import vitalRouter from './routes/vitalRoute.js';
 
 
 const app = express();
@@ -46,6 +47,7 @@ connectDB();
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 app.use('/api/reports', reportRouter);
+app.use('/api/vitals', vitalRouter);
 
 if (process.env.NODE_ENV !== 'production') {
     app.listen(7700, () => {
