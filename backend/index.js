@@ -11,7 +11,6 @@ import vitalRouter from './routes/vitalRoute.js';
 
 const app = express();
 
-app.use(cookieParser());
 
 const allowedOrigins = [
   "http://localhost:5173",          // local dev
@@ -38,6 +37,7 @@ app.use(
 
 
 app.use(express.json());
+app.use(cookieParser());
 
 
 dotenv.config();
