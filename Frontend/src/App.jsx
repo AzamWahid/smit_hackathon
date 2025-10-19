@@ -5,6 +5,10 @@ import { CssBaseline } from '@mui/material';
 import Home from './pages/Home.jsx';
 import Product from './pages/Product.jsx';
 import { Bounce, ToastContainer } from 'react-toastify';
+import UploadReport from './pages/UploadReports.jsx';
+import Report from './pages/Report.jsx';
+import AddVitals from './pages/AddVitals.jsx';
+import PrivateRoute from './routes/PrivateRoute.jsx';
 
 function App() {
 
@@ -14,9 +18,42 @@ function App() {
       <CssBaseline />
 
       <Routes>
-        <Route index element={<Home />} />
-        <Route path='/products' element={<Product />} />
-        <Route path='/login' element={<AuthForm />} />
+        {/* Public route */}
+        <Route path="/login" element={<AuthForm />} />
+
+        {/* Protected routes */}
+        <Route
+          index
+          element={
+            <PrivateRoute>
+              <Home />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/upload-report"
+          element={
+            <PrivateRoute>
+              <UploadReport />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/addVitals"
+          element={
+            <PrivateRoute>
+              <AddVitals />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/reports"
+          element={
+            <PrivateRoute>
+              <Report />
+            </PrivateRoute>
+          }
+        />
       </Routes>
 
       <ToastContainer

@@ -1,5 +1,5 @@
 import express from 'express';
-import { login, profilePicUpload, register } from '../controller/authController.js';
+import { login, logout, profilePicUpload, register } from '../controller/authController.js';
 import multer from 'multer';
 
 const authRouter = express.Router();
@@ -25,6 +25,7 @@ const upload = multer({ storage: storage })
 
 authRouter.post('/register',upload.single('ProfPic'), register)
 authRouter.post('/login', login)
+authRouter.post('/logout', logout)
 authRouter.post('/profilePic', upload.single('ProfPic'), profilePicUpload)
 
 
