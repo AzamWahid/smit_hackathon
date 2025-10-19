@@ -4,10 +4,12 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { BASE_URL, ToastAlert } from "../utils";
 import { reportFetchStart, reportFetchSuccess, reportFetchFailure } from "../redux/slices/reportSlice"; // reuse same slice for simplicity
+import { useNavigate } from "react-router-dom";
 
 function AddVitals() {
   const dispatch = useDispatch();
   const { reportLoading } = useSelector((state) => state.report);
+  const navigate = useNavigate();
 
   const [vitals, setVitals] = useState({
     bp: "",
@@ -28,6 +30,7 @@ function AddVitals() {
       const res = await axios.post(`${BASE_URL}/vitals/add`, vitals, { withCredentials: true });
       dispatch(reportFetchSuccess(res.data.data));
       ToastAlert({ type: "success", message: "Vitals added successfully!" });
+      navigate('/')
       setVitals({ bp: "", sugar: "", weight: "", notes: "", date: "" });
     } catch (err) {
       console.error(err);

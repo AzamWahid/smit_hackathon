@@ -4,6 +4,7 @@ import { successHandler, errorHandler } from "../utils/responseHandler.js";
 
 // Add new vitals
 export const addVital = async (req, res) => {
+    
   try {
     await connectDB();
     console.log(req.body)
