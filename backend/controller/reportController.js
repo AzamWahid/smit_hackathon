@@ -12,20 +12,43 @@ export const uploadReport = async (req, res) => {
     await connectDB();
     const uploadRes = await uploadOnCloudinary(req.file); // allow pdf/image
     const report = await Report.create({
-      userId: req.userId,
+      userId: req.userId, // from auth middleware
+      reportName: req.body.reportName,
+      doctorName: req.body.doctorName,
       originalName: req.file.originalname,
       cloudUrl: uploadRes.secure_url,
       cloudPublicId: uploadRes.public_id,
       mimetype: req.file.mimetype,
       size: req.file.size,
     });
-
     return successHandler(res, 200, "Report uploaded successfully", report);
   } catch (err) {
     console.log(err);
     return errorHandler(res, 500, "Upload failed", err.message);
   }
 };
+
+
+// 📜 Get all reports for logged-in user
+export const getReports = async (req, res) => {
+  try {
+    await connectDB();
+
+    const reports = await Report.find({ userId: req.userId }).sort({
+      createdAt: -1,
+    });
+
+    if (!reports || reports.length === 0) {
+      return errorHandler(res, 404, "No reports found");
+    }
+
+    return successHandler(res, 200, "Reports fetched successfully", reports);
+  } catch (err) {
+    console.error("Get Reports Error:", err);
+    return errorHandler(res, 500, "Failed to fetch reports", err.message);
+  }
+};
+
 
 // 🤖 Analyze Report (Gemini later)
 export const analyzeReport = async (req, res) => {

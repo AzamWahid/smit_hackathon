@@ -114,6 +114,10 @@ export const login = async (req, res) => {
     }
 }
 
+export const logout = (req, res) => {
+  res.clearCookie('accessToken');
+  res.status(200).send({ message: 'Logged out successfully' });
+};
 
 export const profilePicUpload = async (req, res) => {
     try {
