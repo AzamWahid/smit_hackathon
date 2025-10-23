@@ -50,7 +50,6 @@ export const getReports = async (req, res) => {
 };
 
 
-// 🤖 Analyze Report (Gemini later)
 export const analyzeReport = async (req, res) => {
   try {
     const { id } = req.params;
